@@ -150,4 +150,12 @@ def preprocessSyn(config, data=None):
         return X_train_left, X_train_right, X_test_left, X_test_right
 
 def preprocessOBD(data, context):
-    pass
+    if context > data.shape[0]:
+        context = data.shape[0]
+    X_left = []
+    X_right = []
+    context_l = int(context/2)
+    for i in range(len(data) - context + 1):
+        X_left.append(data[i : i+context_l].tolist())
+        X_right.append(data[i+context_l : i+context].tolist())
+    return X_left, X_right

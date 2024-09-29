@@ -14,17 +14,18 @@ parent = os.path.abspath('')
 
 # CONFIG for HENON
 config = {
-    'dataset' : 'henon_2000_6',
+    'dataset' : 'henon_10000_10',
     'chunksize' : 30,
     'batchsize' : 4096,
     'test_split' : 0.15,
     'epochs' : 2500,
+    'patience' : 200,
     'hidden_size' : 128,
     'lambda' : 0.1,
     'lam_ridge' : 0,
     'lr' : 0.03,
     'beta_mmd' : 0.1,
-    'verbose_interval' : 20,
+    'verbose' : 1,
     'beta_e' : 1,
     'future' : 20
 }

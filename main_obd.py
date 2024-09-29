@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from trainer import trainCausalLSTM, trainWithErrorCompensation
 from models import ErrorCompensation, CausalLSTM
 from inference import batchInference, inference
+from utils import preprocessOBD
 
 torch.manual_seed(42)
 np.random.seed(42)
@@ -26,38 +27,18 @@ num_samples, dim = train_data.shape
 # Discarding Car_Id and Person_Id
 n_dim = dim-2
 
-def preprocessOBD(X, context):
-    def createChunks(data, context):
-        if context > data.shape[0]:
-            context = data.shape[0]
-        X_left = []
-        X_right = []
-        context_l = int(context/2)
-        for i in range(len(data) - context + 1):
-            X_left.append(data[i : i+context_l].tolist())
-            X_right.append(data[i+context_l : i+context].tolist())
-        return X_left, X_right
-
-    # parent = os.path.abspath('')
-    # dataset = os.path.join(parent, 'datasets', f"{config['dataset']}.npy")
-    # context = config['chunksize']
-    # context = 30
-    # X = np.load(dataset).T
-
-    X_train_left, X_train_right = createChunks(X, context)
-    return X_train_left, X_train_right
-
 config = {
     'dataset' : 'OBD',
     'chunksize' : 30,
     'batchsize' : 4096,
-    'epochs' : 2000,
+    'epochs' : 5000,
+    'patience' : 200,
     'hidden_size' : 256,
     'lambda' : 0.1,
     'lam_ridge' : 0,
     'lr' : 0.01,
     'beta_mmd' : 0.1,
-    'verbose_interval' : 5,
+    'verbose' : 1,
     'beta_e' : 1,
     'future' : 20
 }

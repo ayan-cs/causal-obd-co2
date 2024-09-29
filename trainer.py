@@ -13,7 +13,6 @@ def trainCausalLSTM(model, train_dl, val_dl, dim, config):
 
     model = model.cuda()
     criterion = Criterion(config['beta_mmd'], config['lam_ridge'], model='clstm')
-    # mse = nn.MSELoss().cuda()
     prox = ProximalGradientDescent(model.parameters(), lr=config['lr'], lam=config['lambda'])
     callback = EarlyStopper(patience=config['patience'])
     
@@ -64,16 +63,16 @@ def trainCausalLSTM(model, train_dl, val_dl, dim, config):
 
         if verbose == 1:
             print(f"\nEpoch {epoch}\n")
-            print(f"Train loss : {train_loss_list[-1]:.6f}")
+            print(f"Train loss : {train_loss_list[-1]:.6f}\tValidation loss : {val_loss_list[-1]:.6f}")
             print(f"Variable usage : {100 * torch.mean(model.getCausalMatrix().float()):.4f}%")
 
-        if train_loss_list[-1] < best_loss:
+        if val_loss_list[-1] < best_loss:
             torch.save(model.state_dict(), os.path.join(checkpoints_path, f"clstm_{config['dataset']}.pth"))
-            best_loss = train_loss_list[-1]
+            best_loss = val_loss_list[-1]
             best_epoch = epoch
             print(f"CLSTM model saved with Val loss : {best_loss:.6f} on Epoch {best_epoch}")
     
-    print(f"\nTraining complete! Best model saved with Train Loss : {best_loss} in Epoch {best_epoch}.\n")
+    print(f"\nTraining complete! Best model saved with Val Loss : {best_loss} in Epoch {best_epoch}.\n")
     return train_loss_list, val_loss_list
 
 def trainWithErrorCompensation(clstm, errorc, train_dl, val_dl, dim, config):
@@ -157,12 +156,12 @@ def trainWithErrorCompensation(clstm, errorc, train_dl, val_dl, dim, config):
 
         if verbose == 1:
             print(f"\nEpoch {epoch}\n")
-            print(f"CLSTM train loss : {train_loss_list[-1]:.6f}\nErrorC train loss : {train_loss_list_e[-1]:.6f}")
+            print(f"ErrorC train loss : {train_loss_list_e[-1]:.6f}\tVal loss : {val_loss_list_e[-1]:.6f}")
             print(f"Variable usage : {100 * torch.mean(clstm.getCausalMatrix().float()):.4f}%")
 
-        if train_loss_list_e[-1] < best_loss:
+        if val_loss_list_e[-1] < best_loss:
             torch.save(errorc.state_dict(), os.path.join(checkpoints_path, f"errorc_{config['dataset']}.pth"))
-            best_loss = train_loss_list_e[-1]
+            best_loss = val_loss_list_e[-1]
             best_epoch = epoch
             print(f"ErrC model saved with Val loss : {best_loss:.6f} on Epoch {best_epoch}")
         
