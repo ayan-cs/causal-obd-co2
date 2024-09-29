@@ -112,7 +112,7 @@ def trainWithErrorCompensation(clstm, errorc, train_dl, val_dl, dim, config):
             X_r = X_r.cuda()
             with torch.no_grad():
                 pred, mu, logvar = clstm(X_l, X_r)
-                loss = criterion(pred, X_r, mu, logvar, clstm)
+                loss, _ = criterion(pred, X_r, mu, logvar, clstm)
 
             error = (X_r - pred).detach()
             pred_e, mu_e, logvar_e = errorc(error)
@@ -138,7 +138,7 @@ def trainWithErrorCompensation(clstm, errorc, train_dl, val_dl, dim, config):
                 X_l = X_l.cuda()
                 X_r = X_r.cuda()
                 pred, mu, logvar = clstm(X_l, X_r)
-                loss, mmd = criterion(pred, X_r, mu, logvar, clstm)
+                loss, _ = criterion(pred, X_r, mu, logvar, clstm)
                 
                 error = (X_r - pred).detach()
                 pred_e, mu_e, logvar_e = errorc(error)
