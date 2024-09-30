@@ -89,8 +89,6 @@ n_dim = X_train_left.shape[-1]
 # Reinitialize the C-LSTM model
 clstm = CausalLSTM(num_features=n_dim, hidden_size=config['hidden_size'], causal_graph=np.ones([n_dim, n_dim]))
 clstm.load_state_dict(torch.load(os.path.join(parent, 'checkpoints', f"clstm_{config['dataset']}.pth"), weights_only=True))
-# for param in clstm.parameters():
-#     param.requires_grad = False
 
 # Initialize ErrorCompensation model
 errorc = ErrorCompensation(num_features=n_dim, hidden_size=config['hidden_size'])
@@ -113,9 +111,3 @@ np.save(os.path.join(parent, 'outputs', "CausalGraph_err.npy"), GC_est)
 dim = X_train_left.shape[-1]
 rmse, avgmmd, mae = batchInference(val_dl, dim, config)
 print(f"RMSE : {rmse}\tMMD : {avgmmd}\tMAE : {mae}")
-
-# instance_idx = 2
-
-# X_pred = inference(X_train_left[instance_idx].unsqueeze(0), dim=X_train_left.shape[-1], config=config)
-# num_items = X_train_left[instance_idx].flatten().shape[0]
-# print(f"Euclidean distance of single sample : {torch.sqrt(torch.sum((X_train_right[2] - X_pred[0])**2) / num_items)}")

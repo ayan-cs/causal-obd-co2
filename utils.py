@@ -1,6 +1,5 @@
 import os, copy
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 from scipy.integrate import odeint
 
@@ -159,3 +158,10 @@ def preprocessOBD(data, context):
         X_left.append(data[i : i+context_l].tolist())
         X_right.append(data[i+context_l : i+context].tolist())
     return X_left, X_right
+
+def MinMaxScaler(data):   
+    min_val = np.min(np.min(data, axis = 0), axis = 0)
+    data = data - min_val
+    max_val = np.max(np.max(data, axis = 0), axis = 0)
+    norm_data = data / (max_val + 1e-7)
+    return norm_data

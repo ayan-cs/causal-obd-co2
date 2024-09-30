@@ -55,14 +55,13 @@ def batchInference(dl, dim, config):
             X_pred = clstm(X_l, None, error=err_pred, mode='inference', phase=2, future=w_size)
             loss = mse(X_pred, X_r)
             _, mmd = criterion(pred, X_r, mu, logvar, clstm)
-            print(mmd)
             l1 = mae(X_pred, X_r)
             total_samples += num_items
             total_mse += loss.item() * num_items
             total_mmd += mmd.item() * num_items
             total_mae += l1.item() * num_items
 
-        rmse = (total_mse/total_samples) ** 5
+        rmse = (total_mse/total_samples) ** 0.5
         avgmmd = (total_mmd/total_samples)
         avgmae = (total_mae/total_samples)
     
