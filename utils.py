@@ -118,50 +118,10 @@ def getCausalMatrix(n_dim, data='henon'):
             GC[i, (i - 2) % n_dim] = 1
         return GC
 
+# Function will be updated soon
 def preprocessSyn(config, data=None):
+    pass
 
-    def createChunks(data, context):
-        if context > data.shape[0]:
-            context = data.shape[0]
-        X_left = []
-        X_right = []
-        context_l = int(context/2)
-        for i in range(len(data) - context + 1):
-            X_left.append(data[i : i+context_l].tolist())
-            X_right.append(data[i+context_l : i+context].tolist())
-        return X_left, X_right
-
-    if data is not None:
-        X = data
-        context = config['chunksize']
-        X_left, X_right = createChunks(X, context)
-        X_train_left, X_train_right, X_test_left, X_test_right = createSplit(X_left, X_right, test_size=config['test_split'], shuffle=True)
-        return X_train_left, X_train_right, X_test_left, X_test_right
-    
-    else:
-        parent = os.path.abspath('')
-        dataset = os.path.join(parent, 'datasets', f"{config['dataset']}.npy")
-        context = config['chunksize']
-        X = np.load(dataset).T
-
-        X_left, X_right = createChunks(X, context)
-        X_train_left, X_train_right, X_test_left, X_test_right = createSplit(X_left, X_right, test_size=config['test_split'], shuffle=True)
-        return X_train_left, X_train_right, X_test_left, X_test_right
-
+# Function will be updated soon
 def preprocessOBD(data, context):
-    if context > data.shape[0]:
-        context = data.shape[0]
-    X_left = []
-    X_right = []
-    context_l = int(context/2)
-    for i in range(len(data) - context + 1):
-        X_left.append(data[i : i+context_l].tolist())
-        X_right.append(data[i+context_l : i+context].tolist())
-    return X_left, X_right
-
-def MinMaxScaler(data):   
-    min_val = np.min(np.min(data, axis = 0), axis = 0)
-    data = data - min_val
-    max_val = np.max(np.max(data, axis = 0), axis = 0)
-    norm_data = data / (max_val + 1e-7)
-    return norm_data
+    pass

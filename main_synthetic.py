@@ -1,11 +1,10 @@
 import numpy as np
 import os, torch
 from torch.utils.data import DataLoader, TensorDataset
-import matplotlib.pyplot as plt
 from utils import preprocessSyn, getCausalMatrix
 from trainer import trainCausalLSTM, trainWithErrorCompensation
 from models import ErrorCompensation, CausalLSTM
-from inference import batchInference, inference
+from inference import batchInference
 
 torch.manual_seed(42)
 np.random.seed(42)

@@ -82,13 +82,11 @@ n_dim = causal_graph.shape[-1]
 # Reinitialize the C-LSTM model
 clstm = CausalLSTM(num_features=n_dim, hidden_size=config['hidden_size'], causal_graph=np.ones([n_dim, n_dim]))
 clstm.load_state_dict(torch.load(os.path.join(parent, 'checkpoints', f"clstm_{config['dataset']}.pth"), weights_only=True))
-for param in clstm.parameters():
-    param.requires_grad = False
 
 # Initialize ErrorCompensation model
 errorc = ErrorCompensation(num_features=n_dim, hidden_size=config['hidden_size'])
 
-train_loss_list, val_loss_list, train_loss_list_e, val_loss_list_e = trainWithErrorCompensation(clstm, errorc, train_dl, val_dl=train_dl, dim=n_dim, config=config)
+train_loss_list, val_loss_list, train_loss_list_e, val_loss_list_e = trainWithErrorCompensation(clstm, errorc, train_dl, val_dl=val_dl, dim=n_dim, config=config)
 
 clstm.load_state_dict(torch.load(os.path.join(parent, 'checkpoints', f"clstm_{config['dataset']}.pth"), weights_only=True))
 GC_est_err = clstm.getCausalMatrix().cpu().data.numpy()
