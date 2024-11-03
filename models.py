@@ -7,8 +7,8 @@ class LSTMDecoder(nn.Module):
         super(LSTMDecoder, self).__init__()
         self.hidden_size = hidden_size
         self.num_series = num_features
-        # self.lstm = nn.LSTM(num_features, hidden_size, batch_first=True)
-        self.lstm = nn.GRU(num_features, hidden_size, batch_first=True)
+        self.lstm = nn.LSTM(num_features, hidden_size, batch_first=True)
+        # self.lstm = nn.GRU(num_features, hidden_size, batch_first=True)
         self.lstm.flatten_parameters()
         self.fc = nn.Linear(hidden_size, 1)
         self.sigmoid = nn.Sigmoid()
@@ -29,8 +29,8 @@ class CausalLSTM(nn.Module):
         self.hidden_size = hidden_size
         self.num_series = num_features
         
-        # self.encoder = nn.LSTM(num_features, hidden_size, batch_first=True)
-        self.encoder = nn.GRU(num_features, hidden_size, batch_first=True)
+        self.encoder = nn.LSTM(num_features, hidden_size, batch_first=True)
+        # self.encoder = nn.GRU(num_features, hidden_size, batch_first=True)
         self.encoder.flatten_parameters()
         
         self.fc_mu = nn.Linear(hidden_size, hidden_size)
@@ -113,14 +113,16 @@ class ErrorCompensation(nn.Module):
         self.hidden_size = hidden_size
         self.num_series = num_features
 
-        self.encoder = nn.GRU(num_features, hidden_size, batch_first=True)
+        self.encoder = nn.LSTM(num_features, hidden_size, batch_first=True)
+        # self.encoder = nn.GRU(num_features, hidden_size, batch_first=True)
         self.encoder.flatten_parameters()
         self.fc_mu = nn.Linear(hidden_size, hidden_size)
         self.fc_logvar = nn.Linear(hidden_size, hidden_size)
         self.fc_hidden = nn.Linear(hidden_size, hidden_size)
         self.tanh = nn.Tanh()
 
-        self.decoder = nn.GRU(num_features, hidden_size, batch_first=True)
+        self.decoder = nn.LSTM(num_features, hidden_size, batch_first=True)
+        # self.decoder = nn.GRU(num_features, hidden_size, batch_first=True)
         self.decoder.flatten_parameters()
         self.fc = nn.Linear(hidden_size, num_features)
     
